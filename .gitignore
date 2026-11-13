@@ -1,0 +1,7 @@
+buildroot-*/
+output/
+output-prod/
+dl/
+*.img
+*.img.xz
+*.log

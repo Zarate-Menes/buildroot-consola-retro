@@ -1,0 +1,11 @@
+# mednafen.hash
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Hashes de la fuente de Mednafen. El SHA-256 se calculó localmente y se
+# comprobó contra el MD5 publicado por SlackBuilds.org.
+md5     c3d2da40f7ceeab1a57582f23606c98a  mednafen-1.32.1.tar.xz
+sha256  de7eb94ab66212ae7758376524368a8ab208234b33796625ca630547dbc83832  mednafen-1.32.1.tar.xz
+sha256  8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643  COPYING

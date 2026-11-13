@@ -1,0 +1,46 @@
+#!/bin/sh
+#
+# S01data
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Revisa y monta la partición de datos /data, crea la estructura inicial de
+# ROMs y la configuración de Mednafen, e instala la tarea de mantenimiento.
+# La raíz del sistema es de solo lectura; todo lo que cambia vive en /data.
+
+DEV=/dev/mmcblk0p3
+TEMPLATE=/usr/share/consola/mednafen.cfg
+
+start() {
+	# Producción: tercera partición; desarrollo: carpeta de root
+	if [ -b "$DEV" ]; then
+		e2fsck -p "$DEV" >/dev/null 2>&1
+		mount -t ext4 -o noatime "$DEV" /data || return 1
+		MHOME=/data/mednafen
+		mkdir -p /data/roms/nes /data/roms/snes /data/roms/gba
+	else
+		MHOME=/root/.mednafen
+	fi
+
+	# Copia la configuración base de Mednafen solo si no existe
+	mkdir -p "$MHOME"
+	[ -f "$MHOME/mednafen.cfg" ] || cp "$TEMPLATE" "$MHOME/mednafen.cfg"
+
+	# Instala la tarea de mantenimiento para crond
+	mkdir -p /var/spool/cron/crontabs
+	cp /etc/consola/crontab /var/spool/cron/crontabs/root
+}
+
+# Desmonta /data al apagar
+stop() {
+	grep -q ' /data ' /proc/mounts && umount /data
+}
+
+case "$1" in
+	start) start ;;
+	stop)  stop ;;
+	*) echo "Uso: $0 {start|stop}"; exit 1 ;;
+esac
+exit 0

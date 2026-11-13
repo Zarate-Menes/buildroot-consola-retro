@@ -1,0 +1,8 @@
+# crontab
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Tarea de mantenimiento cada hora.
+0 * * * * /usr/sbin/consola-mantenimiento

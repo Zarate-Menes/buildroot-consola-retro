@@ -1,0 +1,11 @@
+# busybox_prod.fragment
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Servicios de BusyBox que se desactivan en la variante de producción.
+# CONFIG_SYSLOGD is not set
+# CONFIG_KLOGD is not set
+# CONFIG_SEEDRNG is not set
+# CONFIG_BB_SYSCTL is not set

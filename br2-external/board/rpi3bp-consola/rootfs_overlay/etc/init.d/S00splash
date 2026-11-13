@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# S00splash
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Script de arranque que muestra la imagen personalizada en el framebuffer y
+# reproduce la música de inicio en bucle. Es el primer script que ejecuta init.
+# El frontend de la consola debe ejecutar "S00splash stop" antes de usar la
+# pantalla y el audio.
+
+IMG=/usr/share/splash/splash.rgb565.gz
+WAV=/usr/share/splash/arranque.wav
+PIDFILE=/var/run/splash-audio.pid
+
+# Espera a que exista /dev/fb0 (máximo 5 s) y escribe la imagen RGB565
+draw() {
+	i=0
+	while [ ! -c /dev/fb0 ] && [ $i -lt 50 ]; do
+		usleep 100000
+		i=$((i + 1))
+	done
+	[ -c /dev/fb0 ] || exit 1
+	echo 0 > /sys/class/graphics/fbcon/cursor_blink 2>/dev/null
+	zcat "$IMG" > /dev/fb0
+}
+
+# Dibuja la imagen en segundo plano y lanza el bucle de audio
+start() {
+	draw </dev/null >/dev/null 2>&1 &
+	( while true; do aplay -q -D default "$WAV" || sleep 1; done ) \
+		</dev/null >/dev/null 2>&1 &
+	echo $! > "$PIDFILE"
+}
+
+# Detiene el bucle de audio
+stop() {
+	[ -f "$PIDFILE" ] && kill "$(cat "$PIDFILE")" 2>/dev/null
+	killall -q aplay
+	rm -f "$PIDFILE"
+}
+
+case "$1" in
+	start)   start ;;
+	stop)    stop ;;
+	restart) stop; start ;;
+	*) echo "Uso: $0 {start|stop|restart}"; exit 1 ;;
+esac
+exit 0

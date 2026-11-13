@@ -1,0 +1,44 @@
+# genimage.cfg.in
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Plantilla de particiones de la microSD: arranque FAT, raíz SquashFS y datos ext4.
+image boot.vfat {
+	vfat {
+		files = {
+#BOOT_FILES#
+		}
+	}
+	size = 32M
+}
+
+image data.ext4 {
+	ext4 {
+		label = "datos"
+		use-mke2fs = true
+	}
+	size = 256M
+}
+
+image sdcard.img {
+	hdimage {
+	}
+
+	partition boot {
+		partition-type = 0xC
+		bootable = "true"
+		image = "boot.vfat"
+	}
+
+	partition rootfs {
+		partition-type = 0x83
+		image = "rootfs.squashfs"
+	}
+
+	partition data {
+		partition-type = 0x83
+		image = "data.ext4"
+	}
+}

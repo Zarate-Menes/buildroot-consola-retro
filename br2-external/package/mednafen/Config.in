@@ -1,0 +1,21 @@
+# Config.in
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Opción de menú del paquete Mednafen en Buildroot.
+config BR2_PACKAGE_MEDNAFEN
+	bool "mednafen"
+	depends on BR2_INSTALL_LIBSTDCPP
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	depends on BR2_USE_MMU
+	select BR2_PACKAGE_SDL2
+	select BR2_PACKAGE_ALSA_LIB
+	select BR2_PACKAGE_FLAC
+	select BR2_PACKAGE_ZLIB
+	help
+	  Emulador multisistema por linea de comandos (SDL2).
+	  Solo se compilan los modulos NES, SNES (bsnes y snes_faust) y GBA.
+
+	  https://mednafen.github.io/

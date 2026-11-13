@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# consola-mantenimiento
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Tarea periódica que ejecuta crond cada hora.
+
+# Elimina de /tmp los archivos con más de un día (tmpfs ocupa memoria RAM)
+find /tmp -xdev -type f -mtime +1 -delete 2>/dev/null
+
+# Escribe en la tarjeta SD los datos pendientes de /data
+sync

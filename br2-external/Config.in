@@ -1,0 +1,8 @@
+# Config.in
+#
+# Autores: Beltrán García Fernando, Vargas Luna José Ángel, Zárate Menes Quetzalli
+# Fecha: 2026.11.12
+# Licencia: MIT
+#
+# Paquetes propios del árbol externo CONSOLA_RETRO.
+source "$BR2_EXTERNAL_CONSOLA_RETRO_PATH/package/mednafen/Config.in"
