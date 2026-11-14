@@ -88,6 +88,58 @@ lee su formato fijo.
 - Las ROMs van en `/data/roms/{nes,snes,gba}`.
 - La configuración de Mednafen está en `/data/mednafen/mednafen.cfg`.
 
+## En caso de algún error en la compilación 
+
+### La compilación se interrumpió (apagado, suspensión, Ctrl+C)
+
+Basta con volver a ejecutar el script. Buildroot continúa desde el último
+paquete terminado y no repite lo ya compilado ni lo ya descargado.
+
+```bash
+./build.sh
+```
+
+### Un paquete quedó a medias y falla al continuar
+
+El mensaje de error indica el paquete (por ejemplo `mesa3d` o `host-attr`).
+Se borra solo ese paquete y se vuelve a ejecutar el script:
+
+```bash
+make -C buildroot-2025.02.19 O=$PWD/output-prod <paquete>-dirclean
+./build.sh
+```
+
+### Error de autotools: `automake terminated by signal 11`
+
+Síntoma: la compilación se detiene en un paquete del anfitrión con un mensaje
+como:
+
+```
+autoreconf: error: .../output-prod/host/bin/automake terminated by signal 11
+make[1]: *** [package/pkg-generic.mk:262: .../build/host-attr-2.5.2/.stamp_configured] Error 1
+```
+
+Causa: las herramientas de autotools que Buildroot genera para el equipo
+anfitrión (automake y autoconf) quedaron dañadas, por ejemplo tras una
+actualización de Perl del sistema durante la compilación. No es un error de la
+configuración del proyecto.
+
+Solución: regenerar esas herramientas y continuar.
+
+```bash
+make -C buildroot-2025.02.19 O=$PWD/output-prod host-automake-dirclean host-autoconf-dirclean host-attr-dirclean
+./build.sh
+```
+
+Para la variante de desarrollo se usa `O=$PWD/output` en lugar de
+`O=$PWD/output-prod`.
+
+### Espacio en disco
+
+La compilación completa ocupa alrededor de 30 GB entre `dl/`, `output-prod/` y
+el código de Buildroot. Si falta espacio, se puede borrar la variante que no se
+use (`output/` u `output-prod/`).
+
 ## Licencias y créditos
 
 - Archivos propios de este repositorio: MIT (ver `LICENSE`).
